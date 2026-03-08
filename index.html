@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YourUber - Clon de YouTube</title>
+    <style>
+        /* Estilos generales con mucho style */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #ff0000; /* Rojo como YouTube */
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #search-bar {
+            flex: 1;
+            margin: 0 20px;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+        }
+        #user-menu {
+            display: flex;
+            align-items: center;
+        }
+        #profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            background-color: #ccc; /* Placeholder */
+        }
+        #verified-badge {
+            background-color: #00ff00;
+            color: white;
+            font-size: 12px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+            display: none; /* Oculto por defecto */
+        }
+        nav {
+            background-color: #fff;
+            width: 200px;
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            padding: 20px;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav li {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        main {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .video-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .video-card:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background-color: #ccc; /* Placeholder */
+        }
+        .video-info {
+            padding: 10px;
+        }
+        .like-btn, .sub-btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #login-page, #register-page, #admin-panel {
+            display: none;
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #ff0000;
+            color: white;
+            cursor: pointer;
+        }
+        #upload-form, #schedule-form, #live-form {
+            display: none;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        #history-list, #playlist-list {
+            list-style: none;
+            padding: 0;
+        }
+        .admin-user {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .verified-toggle {
+            margin-left: 10px;
+            cursor: pointer;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Página de Login/Registro -->
+    <div id="login-page">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="login-username" placeholder="Usuario">
+        <input type="password" id="login-password" placeholder="Contraseña">
+        <button onclick="login()">Iniciar Sesión</button>
+        <p>¿No tienes cuenta? <span onclick="showRegister()" style="color: blue; cursor: pointer;">Regístrate</span></p>
+    </div>
+
+    <div id="register-page">
+        <h2>Registrarse</h2>
+        <input type="text" id="reg-username" placeholder="Usuario">
+        <input type="password" id="reg-password" placeholder="Contraseña">
+        <input type="file" id="reg-profile-pic" accept="image/*">
+        <button onclick="register()">Registrarse</button>
+        <p>¿Ya tienes cuenta? <span onclick="showLogin()" style="color: blue; cursor: pointer;">Iniciar Sesión</span></p>
+    </div>
+
+    <!-- Header Principal -->
+    <header id="main-header" style="display: none;">
+        <div id="logo">YourUber</div>
+        <input type="text" id="search-bar" placeholder="Buscar...">
+        <div id="user-menu">
+            <span id="username-display"></span>
+            <span id="verified-badge">Verificado</span>
+            <img id="profile-pic" src="" alt="Foto de Perfil">
+            <button onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <!-- Navegación Lateral -->
+    <nav id="sidebar" style="display: none;">
+        <ul>
+            <li onclick="showHome()">Inicio</li>
+            <li onclick="showHistory()">Historial</li>
+            <li onclick="showPlaylist()">Lista de Reproducción</li>
+            <li onclick="showUpload()">Publicar Video</li>
+            <li onclick="showSchedule()">Programar Video</li>
+            <li onclick="showLive()">En Vivo (OBS)</li>
+            <li id="admin-menu" style="display: none;" onclick="showAdminPanel()">Panel Admin</li>
+        </ul>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main id="main-content" style="display: none;">
+
+        <!-- Página de Inicio -->
+        <div id="home-page">
+            <h2>Página Principal</h2>
+            <div class="video-grid">
+                <!-- Videos de ejemplo -->
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <div class="video-info">
+                        <h3>Video 1</h3>
+                        <button class="like-btn" onclick="likeVideo(1)">Like (0)</button>
+                        <button class="sub-btn" onclick="subscribe(1)">Suscribirse</button>
+                        <button onclick="watchVideo(1)">Ver</button>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <div class="video-info">
+                        <h3>Video 2</h3>
+                        <button class="like-btn" onclick="likeVideo(2)">Like (0)</button>
+                        <button class="sub-btn" onclick="subscribe(2)">Suscribirse</button>
+                        <button onclick="watchVideo(2)">Ver</button>
+                    </div>
+                </div>
+                <!-- Agrega más videos según necesites -->
+            </div>
+        </div>
+
+        <!-- Historial -->
+        <div id="history-page" style="display: none;">
+            <h2>Historial de Videos Vistos</h2>
+            <ul id="history-list"></ul>
+        </div>
+
+        <!-- Lista de Reproducción (Cola) -->
+        <div id="playlist-page" style="display: none;">
+            <h2>Lista de Reproducción</h2>
+            <ul id="playlist-list"></ul>
+            <button onclick="addToPlaylist()">Agregar a Cola</button>
+        </div>
+
+        <!-- Formulario de Subida -->
+        <div id="upload-form" style="display: none;">
+            <h2>Publicar Video</h2>
+            <input type="text" id="video-title" placeholder="Título">
+            <input type="file" id="video-file" accept="video/*">
+            <input type="file" id="cover-file" accept="image/*" placeholder="Portada">
+            <button onclick="uploadVideo()">Subir</button>
+        </div>
+
+        <!-- Programar Video -->
+        <div id="schedule-form" style="display: none;">
+            <h2>Programar Video</h2>
+            <input type="text" id="schedule-title" placeholder="Título">
+            <input type="file" id="schedule-video" accept="video/*">
+            <input type="datetime-local" id="schedule-time">
+            <button onclick="scheduleVideo()">Programar</button>
+        </div>
+
+        <!-- En Vivo (Simulación OBS) -->
+        <div id="live-form" style="display: none;">
+            <h2>En Vivo con OBS</h2>
+            <p>Configura OBS para transmitir a esta URL simulada: rtmp://youruber/live/key</p>
+            <button onclick="startLive()">Iniciar Transmisión</button>
+        </div>
+
+    </main>
+
+    <!-- Panel Admin -->
+    <div id="admin-panel" style="display: none;">
+        <h2>Panel Admin</h2>
+        <ul id="user-list"></ul>
+        <button onclick="loadUsers()">Cargar Usuarios</button>
+    </div>
+
+    <script>
+        // Simulación de datos con localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let currentUser = null;
+        let videosWatched = [];
+        let playlist = [];
+        let likes = {};
+        let subs = {};
+        let isAdmin = false;
+
+        // Cuenta admin por defecto
+        if (!users.find(u => u.username === 'admin')) {
+            users.push({ username: 'admin', password: 'admin', profilePic: '', verified: false, banned: false });
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function showLogin() {
+            document.getElementById('login-page').style.display = 'block';
+            document.getElementById('register-page').style.display = 'none';
+            hideMain();
+        }
+
+        function showRegister() {
+            document.getElementById('register-page').style.display = 'block';
+            document.getElementById('login-page').style.display = 'none';
+            hideMain();
+        }
+
+        function hideMain() {
+            document.getElementById('main-header').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'none';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+
+        function showMain() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('register-page').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('sidebar').style.display = 'block';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('username-display').innerText = currentUser.username;
+            document.getElementById('profile-pic').src = currentUser.profilePic || '';
+            if (currentUser.verified) {
+                document.getElementById('verified-badge').style.display = 'inline';
+            }
+            if (currentUser.username === 'admin') {
+                document.getElementById('admin-menu').style.display = 'block';
+                isAdmin = true;
+            }
+            showHome();
+        }
+
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const user = users.find(u => u.username === username && u.password === password && !u.banned);
+            if (user) {
+                currentUser = user;
+                showMain();
+            } else {
+                alert('Credenciales incorrectas o usuario baneado');
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const file = document.getElementById('reg-profile-pic').files[0];
+            if (users.find(u => u.username === username)) {
+                alert('Usuario ya existe');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                users.push({ username, password, profilePic: e.target.result, verified: false, banned: false });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Registrado exitosamente');
+                showLogin();
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                users.push({ username, password, profilePic: '', verified: false, banned: false });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Registrado exitosamente');
+                showLogin();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            showLogin();
+        }
+
+        function showHome() {
+            hideAllPages();
+            document.getElementById('home-page').style.display = 'block';
+        }
+
+        function showHistory() {
+            hideAllPages();
+            document.getElementById('history-page').style.display = 'block';
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            videosWatched.forEach(v => {
+                const li = document.createElement('li');
+                li.innerText = `Video ${v}`;
+                list.appendChild(li);
+            });
+        }
+
+        function showPlaylist() {
+            hideAllPages();
+            document.getElementById('playlist-page').style.display = 'block';
+            const list = document.getElementById('playlist-list');
+            list.innerHTML = '';
+            playlist.forEach(v => {
+                const li = document.createElement('li');
+                li.innerText = `Video ${v}`;
+                list.appendChild(li);
+            });
+        }
+
+        function showUpload() {
+            hideAllPages();
+            document.getElementById('upload-form').style.display = 'block';
+        }
+
+        function showSchedule() {
+            hideAllPages();
+            document.getElementById('schedule-form').style.display = 'block';
+        }
+
+        function showLive() {
+            hideAllPages();
+            document.getElementById('live-form').style.display = 'block';
+        }
+
+        function hideAllPages() {
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('history-page').style.display = 'none';
+            document.getElementById('playlist-page').style.display = 'none';
+            document.getElementById('upload-form').style.display = 'none';
+            document.getElementById('schedule-form').style.display = 'none';
+            document.getElementById('live-form').style.display = 'none';
+        }
+
+        function watchVideo(id) {
+            if (!videosWatched.includes(id)) {
+                videosWatched.push(id);
+            }
+            alert(`Viendo Video ${id}`);
+        }
+
+        function addToPlaylist() {
+            const id = prompt('ID de Video para agregar a cola:');
+            if (id) playlist.push(id);
+        }
+
+        function likeVideo(id) {
+            likes[id] = (likes[id] || 0) + 1;
+            alert(`Like en Video ${id}: ${likes[id]}`);
+        }
+
+        function subscribe(id) {
+            subs[id] = true;
+            alert(`Suscrito a canal de Video ${id}`);
+        }
+
+        function uploadVideo() {
+            alert('Video subido (simulado)');
+        }
+
+        function scheduleVideo() {
+            alert('Video programado (simulado)');
+        }
+
+        function startLive() {
+            alert('Transmisión en vivo iniciada (simulada con OBS)');
+        }
+
+        function showAdminPanel() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            loadUsers();
+        }
+
+        function loadUsers() {
+            if (!isAdmin) return;
+            const list = document.getElementById('user-list');
+            list.innerHTML = '';
+            users.forEach(u => {
+                if (u.username !== 'admin') {
+                    const div = document.createElement('div');
+                    div.className = 'admin-user';
+                    div.innerHTML = `${u.username} ${u.banned ? '(Baneado)' : ''}`;
+                    const banBtn = document.createElement('button');
+                    banBtn.innerText = u.banned ? 'Desbanear' : 'Banear';
+                    banBtn.onclick = () => banUser(u.username);
+                    div.appendChild(banBtn);
+                    const verifToggle = document.createElement('span');
+                    verifToggle.className = 'verified-toggle';
+                    verifToggle.innerText = u.verified ? 'Quitar Verificado' : 'Verificar (como Roblox)';
+                    verifToggle.onclick = () => toggleVerified(u.username);
+                    div.appendChild(verifToggle);
+                    list.appendChild(div);
+                }
+            });
+        }
+
+        function banUser(username) {
+            const user = users.find(u => u.username === username);
+            user.banned = !user.banned;
+            localStorage.setItem('users', JSON.stringify(users));
+            loadUsers();
+        }
+
+        function toggleVerified(username) {
+            const user = users.find(u => u.username === username);
+            user.verified = !user.verified;
+            localStorage.setItem('users', JSON.stringify(users));
+            if (currentUser && currentUser.username === username) {
+                currentUser.verified = user.verified;
+                document.getElementById('verified-badge').style.display = user.verified ? 'inline' : 'none';
+            }
+            loadUsers();
+        }
+
+        // Iniciar en login
+        showLogin();
+    </script>
+</body>
+</html>
