@@ -1,507 +1,694 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YourUber - Clon de YouTube</title>
-    <style>
-        /* Estilos generales con mucho style */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        header {
-            background-color: #ff0000; /* Rojo como YouTube */
-            color: white;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        #search-bar {
-            flex: 1;
-            margin: 0 20px;
-            padding: 8px;
-            border: none;
-            border-radius: 20px;
-        }
-        #user-menu {
-            display: flex;
-            align-items: center;
-        }
-        #profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-left: 10px;
-            background-color: #ccc; /* Placeholder */
-        }
-        #verified-badge {
-            background-color: #00ff00;
-            color: white;
-            font-size: 12px;
-            padding: 2px 5px;
-            border-radius: 3px;
-            margin-left: 5px;
-            display: none; /* Oculto por defecto */
-        }
-        nav {
-            background-color: #fff;
-            width: 200px;
-            position: fixed;
-            top: 60px;
-            bottom: 0;
-            padding: 20px;
-            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-        nav li {
-            margin: 10px 0;
-            cursor: pointer;
-        }
-        main {
-            margin-left: 220px;
-            padding: 20px;
-        }
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .video-card {
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .video-card:hover {
-            transform: scale(1.05);
-        }
-        .video-thumbnail {
-            width: 100%;
-            height: 180px;
-            background-color: #ccc; /* Placeholder */
-        }
-        .video-info {
-            padding: 10px;
-        }
-        .like-btn, .sub-btn {
-            background-color: #ff0000;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            margin: 5px 0;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        #login-page, #register-page, #admin-panel {
-            display: none;
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #ff0000;
-            color: white;
-            cursor: pointer;
-        }
-        #upload-form, #schedule-form, #live-form {
-            display: none;
-            max-width: 600px;
-            margin: 20px auto;
-        }
-        #history-list, #playlist-list {
-            list-style: none;
-            padding: 0;
-        }
-        .admin-user {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-        .verified-toggle {
-            margin-left: 10px;
-            cursor: pointer;
-            color: blue;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YourUber • Next Level</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #111118;
+      --bg-hover: #1a1a22;
+      --primary: #ff0044;
+      --primary-dark: #c70035;
+      --accent: #00f0ff;
+      --text: #e0e0ff;
+      --text-muted: #a0a0cc;
+      --border: #222233;
+      --glow: 0 0 20px rgba(255,0,68,0.4);
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(255,0,68,0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0,240,255,0.06) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 9999;
+      transition: var(--transition);
+    }
+
+    header.scrolled {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+
+    #logo {
+      font-size: 26px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -1px;
+    }
+
+    #search-container {
+      flex: 1;
+      max-width: 720px;
+      margin: 0 32px;
+      position: relative;
+    }
+
+    #search-bar {
+      width: 100%;
+      height: 44px;
+      padding: 0 20px 0 52px;
+      background: rgba(30,30,40,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      color: white;
+      font-size: 15px;
+      transition: var(--transition);
+    }
+
+    #search-bar:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--glow);
+      background: rgba(40,40,55,0.9);
+    }
+
+    #search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    #user-actions {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 8px;
+      border-radius: 50%;
+    }
+
+    .icon-btn:hover {
+      color: white;
+      background: rgba(255,255,255,0.08);
+      transform: scale(1.15);
+    }
+
+    #profile-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    #profile-pic-header {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid transparent;
+      transition: var(--transition);
+    }
+
+    #profile-pic-header:hover {
+      border-color: var(--primary);
+      box-shadow: var(--glow);
+      transform: scale(1.08);
+    }
+
+    #verified-badge-header {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      background: linear-gradient(135deg, #00f0ff, #00aaff);
+      color: #000;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 12px;
+      border: 2px solid var(--bg);
+      display: none;
+      box-shadow: 0 0 12px rgba(0,240,255,0.5);
+    }
+
+    /* ─── SIDEBAR ──────────────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 260px;
+      height: calc(100vh - 64px);
+      background: rgba(15,15,22,0.94);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--border);
+      padding: 16px 0;
+      overflow-y: auto;
+      transition: var(--transition);
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 28px;
+      margin: 4px 12px;
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sidebar-item:hover,
+    .sidebar-item.active {
+      background: linear-gradient(90deg, rgba(255,0,68,0.12), transparent);
+      color: white;
+      transform: translateX(6px);
+    }
+
+    .sidebar-item i {
+      width: 28px;
+      margin-right: 20px;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    /* ─── MAIN ─────────────────────────────────────────────────── */
+    #main-content {
+      margin-left: 260px;
+      margin-top: 64px;
+      padding: 32px 40px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 28px;
+      background: linear-gradient(90deg, white, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .video-card {
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--bg-card);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .video-card:hover {
+      transform: translateY(-12px) scale(1.04);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.5), var(--glow);
+    }
+
+    .thumbnail {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #1a1a2e;
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .video-card:hover .thumbnail img {
+      transform: scale(1.08);
+    }
+
+    .duration {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.85);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+
+    .video-info {
+      padding: 16px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 14px;
+    }
+
+    .channel-pic {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+
+    .video-title {
+      font-size: 16px;
+      line-height: 1.38;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .channel-name {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .views-time {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Auth screens */
+    #auth-container {
+      max-width: 460px;
+      margin: 140px auto;
+      padding: 48px 40px;
+      background: rgba(20,20,35,0.9);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+      animation: authPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes authPop {
+      0%   { opacity: 0; transform: scale(0.88) translateY(60px); }
+      100% { opacity: 1; transform: none; }
+    }
+
+    input, button, textarea {
+      width: 100%;
+      padding: 16px;
+      margin: 14px 0;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(30,30,50,0.6);
+      color: white;
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--glow);
+      background: rgba(40,40,60,0.8);
+    }
+
+    button {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border: none;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--glow);
+    }
+
+    /* Upload / Live sections */
+    .upload-section {
+      max-width: 820px;
+      margin: 60px auto;
+      padding: 48px;
+      background: rgba(20,20,35,0.92);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+    }
+
+    /* Admin */
+    .user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      background: rgba(30,30,45,0.5);
+      margin: 12px 0;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .admin-actions button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 12px;
+      transition: var(--transition);
+    }
+
+    .verify-btn { background: linear-gradient(90deg, #00d4ff, #0095ff); color: black; }
+    .ban-btn    { background: #ff2d55; color: white; }
+    .unban-btn  { background: #00c853; color: black; }
+
+    .admin-actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 1024px) {
+      #sidebar { width: 76px; }
+      #main-content { margin-left: 76px; }
+      .sidebar-item span { display: none; }
+      .sidebar-item { justify-content: center; padding: 16px; margin: 8px 12px; }
+      .sidebar-item i { margin: 0; font-size: 24px; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Página de Login/Registro -->
-    <div id="login-page">
-        <h2>Iniciar Sesión</h2>
-        <input type="text" id="login-username" placeholder="Usuario">
-        <input type="password" id="login-password" placeholder="Contraseña">
-        <button onclick="login()">Iniciar Sesión</button>
-        <p>¿No tienes cuenta? <span onclick="showRegister()" style="color: blue; cursor: pointer;">Regístrate</span></p>
+  <!-- ─── AUTH ─────────────────────────────────────────────── -->
+  <div id="auth-container">
+    <div id="login-screen">
+      <h2>Bienvenido a YourUber</h2>
+      <input type="text" id="login-username" placeholder="Usuario"/>
+      <input type="password" id="login-password" placeholder="Contraseña"/>
+      <button onclick="tryLogin()">Entrar</button>
+      <p style="text-align:center; margin-top:24px; color:var(--text-muted);">
+        ¿Nuevo aquí? <span style="color:var(--accent); cursor:pointer; font-weight:600;" onclick="showRegister()">Crear cuenta</span>
+      </p>
     </div>
 
-    <div id="register-page">
-        <h2>Registrarse</h2>
-        <input type="text" id="reg-username" placeholder="Usuario">
-        <input type="password" id="reg-password" placeholder="Contraseña">
-        <input type="file" id="reg-profile-pic" accept="image/*">
-        <button onclick="register()">Registrarse</button>
-        <p>¿Ya tienes cuenta? <span onclick="showLogin()" style="color: blue; cursor: pointer;">Iniciar Sesión</span></p>
+    <div id="register-screen" style="display:none;">
+      <h2>Únete ahora</h2>
+      <input type="text" id="reg-username" placeholder="Nombre de usuario"/>
+      <input type="password" id="reg-password" placeholder="Contraseña"/>
+      <input type="file" id="reg-avatar" accept="image/*"/>
+      <button onclick="tryRegister()">Registrarme</button>
+      <p style="text-align:center; margin-top:24px; color:var(--text-muted);">
+        ¿Ya tienes cuenta? <span style="color:var(--accent); cursor:pointer; font-weight:600;" onclick="showLogin()">Iniciar sesión</span>
+      </p>
     </div>
+  </div>
 
-    <!-- Header Principal -->
-    <header id="main-header" style="display: none;">
-        <div id="logo">YourUber</div>
-        <input type="text" id="search-bar" placeholder="Buscar...">
-        <div id="user-menu">
-            <span id="username-display"></span>
-            <span id="verified-badge">Verificado</span>
-            <img id="profile-pic" src="" alt="Foto de Perfil">
-            <button onclick="logout()">Cerrar Sesión</button>
-        </div>
-    </header>
+  <!-- ─── HEADER ───────────────────────────────────────────── -->
+  <header id="main-header" style="display:none;">
+    <div id="logo">YourUber</div>
+    <div id="search-container">
+      <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="search-bar" placeholder="Buscar videos, canales..."/>
+    </div>
+    <div id="user-actions">
+      <button class="icon-btn" onclick="showSection('upload')"><i class="fa-solid fa-video"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+      <div id="profile-container">
+        <img id="profile-pic-header" src="" alt="Perfil"/>
+        <span id="verified-badge-header">✓</span>
+      </div>
+    </div>
+  </header>
 
-    <!-- Navegación Lateral -->
-    <nav id="sidebar" style="display: none;">
-        <ul>
-            <li onclick="showHome()">Inicio</li>
-            <li onclick="showHistory()">Historial</li>
-            <li onclick="showPlaylist()">Lista de Reproducción</li>
-            <li onclick="showUpload()">Publicar Video</li>
-            <li onclick="showSchedule()">Programar Video</li>
-            <li onclick="showLive()">En Vivo (OBS)</li>
-            <li id="admin-menu" style="display: none;" onclick="showAdminPanel()">Panel Admin</li>
-        </ul>
-    </nav>
+  <!-- ─── SIDEBAR ──────────────────────────────────────────── -->
+  <div id="sidebar" style="display:none;">
+    <div class="sidebar-item active" onclick="showSection('home')"><i class="fa-solid fa-house"></i><span>Inicio</span></div>
+    <div class="sidebar-item" onclick="showSection('history')"><i class="fa-solid fa-clock-rotate-left"></i><span>Historial</span></div>
+    <div class="sidebar-item" onclick="showSection('playlist')"><i class="fa-solid fa-list"></i><span>En cola</span></div>
+    <hr style="border-color:var(--border); margin:20px 24px;"/>
+    <div class="sidebar-item" onclick="showSection('upload')"><i class="fa-solid fa-cloud-arrow-up"></i><span>Subir video</span></div>
+    <div class="sidebar-item" onclick="showSection('schedule')"><i class="fa-solid fa-calendar-clock"></i><span>Programar</span></div>
+    <div class="sidebar-item" onclick="showSection('live')"><i class="fa-solid fa-satellite-dish"></i><span>Ir en vivo</span></div>
+    <div id="admin-sidebar-item" class="sidebar-item" onclick="showSection('admin')" style="display:none;">
+      <i class="fa-solid fa-user-shield"></i><span>Admin Panel</span>
+    </div>
+  </div>
 
-    <!-- Contenido Principal -->
-    <main id="main-content" style="display: none;">
+  <!-- ─── MAIN CONTENT ─────────────────────────────────────── -->
+  <div id="main-content" style="display:none;">
 
-        <!-- Página de Inicio -->
-        <div id="home-page">
-            <h2>Página Principal</h2>
-            <div class="video-grid">
-                <!-- Videos de ejemplo -->
-                <div class="video-card">
-                    <div class="video-thumbnail"></div>
-                    <div class="video-info">
-                        <h3>Video 1</h3>
-                        <button class="like-btn" onclick="likeVideo(1)">Like (0)</button>
-                        <button class="sub-btn" onclick="subscribe(1)">Suscribirse</button>
-                        <button onclick="watchVideo(1)">Ver</button>
-                    </div>
-                </div>
-                <div class="video-card">
-                    <div class="video-thumbnail"></div>
-                    <div class="video-info">
-                        <h3>Video 2</h3>
-                        <button class="like-btn" onclick="likeVideo(2)">Like (0)</button>
-                        <button class="sub-btn" onclick="subscribe(2)">Suscribirse</button>
-                        <button onclick="watchVideo(2)">Ver</button>
-                    </div>
-                </div>
-                <!-- Agrega más videos según necesites -->
+    <div id="home" class="section">
+      <h2>Para ti hoy</h2>
+      <div class="video-grid">
+        <div class="video-card" onclick="watchVideo(1)">
+          <div class="thumbnail"><img src="https://picsum.photos/seed/v1/640/360" alt=""><span class="duration">14:22</span></div>
+          <div class="video-info">
+            <div class="meta">
+              <img class="channel-pic" src="https://picsum.photos/seed/c1/80/80"/>
+              <div>
+                <div class="video-title">El futuro de las transmisiones en vivo 2026</div>
+                <div class="channel-name">TechTrend <span style="color:var(--accent); font-size:13px;">✓</span></div>
+                <div class="views-time">2.4M vistas • hace 11 horas</div>
+              </div>
             </div>
+          </div>
         </div>
-
-        <!-- Historial -->
-        <div id="history-page" style="display: none;">
-            <h2>Historial de Videos Vistos</h2>
-            <ul id="history-list"></ul>
-        </div>
-
-        <!-- Lista de Reproducción (Cola) -->
-        <div id="playlist-page" style="display: none;">
-            <h2>Lista de Reproducción</h2>
-            <ul id="playlist-list"></ul>
-            <button onclick="addToPlaylist()">Agregar a Cola</button>
-        </div>
-
-        <!-- Formulario de Subida -->
-        <div id="upload-form" style="display: none;">
-            <h2>Publicar Video</h2>
-            <input type="text" id="video-title" placeholder="Título">
-            <input type="file" id="video-file" accept="video/*">
-            <input type="file" id="cover-file" accept="image/*" placeholder="Portada">
-            <button onclick="uploadVideo()">Subir</button>
-        </div>
-
-        <!-- Programar Video -->
-        <div id="schedule-form" style="display: none;">
-            <h2>Programar Video</h2>
-            <input type="text" id="schedule-title" placeholder="Título">
-            <input type="file" id="schedule-video" accept="video/*">
-            <input type="datetime-local" id="schedule-time">
-            <button onclick="scheduleVideo()">Programar</button>
-        </div>
-
-        <!-- En Vivo (Simulación OBS) -->
-        <div id="live-form" style="display: none;">
-            <h2>En Vivo con OBS</h2>
-            <p>Configura OBS para transmitir a esta URL simulada: rtmp://youruber/live/key</p>
-            <button onclick="startLive()">Iniciar Transmisión</button>
-        </div>
-
-    </main>
-
-    <!-- Panel Admin -->
-    <div id="admin-panel" style="display: none;">
-        <h2>Panel Admin</h2>
-        <ul id="user-list"></ul>
-        <button onclick="loadUsers()">Cargar Usuarios</button>
+        <!-- Puedes duplicar .video-card para más contenido -->
+      </div>
     </div>
 
-    <script>
-        // Simulación de datos con localStorage
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let currentUser = null;
-        let videosWatched = [];
-        let playlist = [];
-        let likes = {};
-        let subs = {};
-        let isAdmin = false;
+    <div id="history" class="section" style="display:none;">
+      <h2>Historial reciente</h2>
+      <div id="history-list" style="color:var(--text-muted);">Aún no has visto videos...</div>
+    </div>
 
-        // Cuenta admin por defecto
-        if (!users.find(u => u.username === 'admin')) {
-            users.push({ username: 'admin', password: 'admin', profilePic: '', verified: false, banned: false });
-            localStorage.setItem('users', JSON.stringify(users));
-        }
+    <div id="playlist" class="section" style="display:none;">
+      <h2>Tu cola de reproducción</h2>
+      <div id="playlist-list" style="color:var(--text-muted);">Vacía por ahora</div>
+    </div>
 
-        function showLogin() {
-            document.getElementById('login-page').style.display = 'block';
-            document.getElementById('register-page').style.display = 'none';
-            hideMain();
-        }
+    <div id="upload" class="section upload-section" style="display:none;">
+      <h2>Subir tu video</h2>
+      <input type="text" placeholder="Título épico..."/>
+      <input type="file" accept="video/*"/>
+      <input type="file" accept="image/*" placeholder="Miniatura"/>
+      <textarea placeholder="Describe tu obra maestra..."></textarea>
+      <button onclick="uploadVideo()">Lanzar al universo</button>
+    </div>
 
-        function showRegister() {
-            document.getElementById('register-page').style.display = 'block';
-            document.getElementById('login-page').style.display = 'none';
-            hideMain();
-        }
+    <div id="schedule" class="section upload-section" style="display:none;">
+      <h2>Programar lanzamiento</h2>
+      <input type="text" placeholder="Título"/>
+      <input type="file" accept="video/*"/>
+      <input type="file" accept="image/*"/>
+      <input type="datetime-local"/>
+      <button onclick="scheduleVideo()">Programar explosión</button>
+    </div>
 
-        function hideMain() {
-            document.getElementById('main-header').style.display = 'none';
-            document.getElementById('sidebar').style.display = 'none';
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'none';
-        }
+    <div id="live" class="section upload-section" style="display:none;">
+      <h2>En Vivo • Modo Estrella</h2>
+      <div style="padding:24px; background:rgba(0,0,0,0.3); border-radius:16px; margin:24px 0;">
+        <strong style="color:var(--accent);">RTMP URL:</strong> <code style="color:#ffcc00;">rtmp://youruber.live/stream</code><br><br>
+        <strong style="color:var(--accent);">Stream Key:</strong> <code style="color:#ffcc00;">live_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>
+      </div>
+      <p style="color:var(--text-muted); margin:20px 0;">
+        Abre OBS → Ajustes → Transmisión → Servicio: Personalizado<br>
+        Pega la URL y clave → ¡Listo para brillar!
+      </p>
+      <button onclick="startLiveSimulation()" style="font-size:18px; padding:16px 40px;">¡Empezar a transmitir YA!</button>
+      <div id="live-status" style="margin-top:32px; font-size:18px; color:#00ff9d; font-weight:700;"></div>
+    </div>
 
-        function showMain() {
-            document.getElementById('login-page').style.display = 'none';
-            document.getElementById('register-page').style.display = 'none';
-            document.getElementById('main-header').style.display = 'flex';
-            document.getElementById('sidebar').style.display = 'block';
-            document.getElementById('main-content').style.display = 'block';
-            document.getElementById('username-display').innerText = currentUser.username;
-            document.getElementById('profile-pic').src = currentUser.profilePic || '';
-            if (currentUser.verified) {
-                document.getElementById('verified-badge').style.display = 'inline';
-            }
-            if (currentUser.username === 'admin') {
-                document.getElementById('admin-menu').style.display = 'block';
-                isAdmin = true;
-            }
-            showHome();
-        }
+    <div id="admin" class="section" style="display:none;">
+      <h2>Panel de Control Supremo</h2>
+      <div id="admin-user-list"></div>
+    </div>
 
-        function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            const user = users.find(u => u.username === username && u.password === password && !u.banned);
-            if (user) {
-                currentUser = user;
-                showMain();
-            } else {
-                alert('Credenciales incorrectas o usuario baneado');
-            }
-        }
+  </div>
 
-        function register() {
-            const username = document.getElementById('reg-username').value;
-            const password = document.getElementById('reg-password').value;
-            const file = document.getElementById('reg-profile-pic').files[0];
-            if (users.find(u => u.username === username)) {
-                alert('Usuario ya existe');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                users.push({ username, password, profilePic: e.target.result, verified: false, banned: false });
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Registrado exitosamente');
-                showLogin();
-            };
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                users.push({ username, password, profilePic: '', verified: false, banned: false });
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Registrado exitosamente');
-                showLogin();
-            }
-        }
+  <script>
+    // ─── DATOS SIMULADOS ────────────────────────────────────────
+    let users = JSON.parse(localStorage.getItem('youruber_users')) || [];
+    let currentUser = null;
 
-        function logout() {
-            currentUser = null;
-            isAdmin = false;
-            showLogin();
-        }
+    if (!users.some(u => u.username === 'admin')) {
+      users.push({
+        username: 'admin',
+        password: 'admin123',
+        avatar: '',
+        verified: false,
+        banned: false,
+        isAdmin: true
+      });
+      localStorage.setItem('youruber_users', JSON.stringify(users));
+    }
 
-        function showHome() {
-            hideAllPages();
-            document.getElementById('home-page').style.display = 'block';
-        }
+    function saveUsers() { localStorage.setItem('youruber_users', JSON.stringify(users)); }
 
-        function showHistory() {
-            hideAllPages();
-            document.getElementById('history-page').style.display = 'block';
-            const list = document.getElementById('history-list');
-            list.innerHTML = '';
-            videosWatched.forEach(v => {
-                const li = document.createElement('li');
-                li.innerText = `Video ${v}`;
-                list.appendChild(li);
-            });
-        }
+    function showLogin() {
+      document.getElementById('login-screen').style.display = 'block';
+      document.getElementById('register-screen').style.display = 'none';
+      document.getElementById('auth-container').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+      document.getElementById('sidebar').style.display = 'none';
+      document.getElementById('main-content').style.display = 'none';
+    }
 
-        function showPlaylist() {
-            hideAllPages();
-            document.getElementById('playlist-page').style.display = 'block';
-            const list = document.getElementById('playlist-list');
-            list.innerHTML = '';
-            playlist.forEach(v => {
-                const li = document.createElement('li');
-                li.innerText = `Video ${v}`;
-                list.appendChild(li);
-            });
-        }
+    function showRegister() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('register-screen').style.display = 'block';
+    }
 
-        function showUpload() {
-            hideAllPages();
-            document.getElementById('upload-form').style.display = 'block';
-        }
+    function showMainInterface() {
+      document.getElementById('auth-container').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('sidebar').style.display = 'block';
+      document.getElementById('main-content').style.display = 'block';
 
-        function showSchedule() {
-            hideAllPages();
-            document.getElementById('schedule-form').style.display = 'block';
-        }
+      document.getElementById('profile-pic-header').src = currentUser.avatar || `https://picsum.photos/seed/${currentUser.username}/80/80`;
+      document.getElementById('verified-badge-header').style.display = currentUser.verified ? 'inline' : 'none';
 
-        function showLive() {
-            hideAllPages();
-            document.getElementById('live-form').style.display = 'block';
-        }
+      if (currentUser.isAdmin) {
+        document.getElementById('admin-sidebar-item').style.display = 'flex';
+      }
 
-        function hideAllPages() {
-            document.getElementById('home-page').style.display = 'none';
-            document.getElementById('history-page').style.display = 'none';
-            document.getElementById('playlist-page').style.display = 'none';
-            document.getElementById('upload-form').style.display = 'none';
-            document.getElementById('schedule-form').style.display = 'none';
-            document.getElementById('live-form').style.display = 'none';
-        }
+      showSection('home');
+    }
 
-        function watchVideo(id) {
-            if (!videosWatched.includes(id)) {
-                videosWatched.push(id);
-            }
-            alert(`Viendo Video ${id}`);
-        }
+    function tryLogin() {
+      const u = document.getElementById('login-username').value.trim();
+      const p = document.getElementById('login-password').value;
+      const user = users.find(x => x.username === u && x.password === p);
+      if (user && !user.banned) {
+        currentUser = user;
+        showMainInterface();
+      } else {
+        alert('Credenciales inválidas o cuenta bloqueada');
+      }
+    }
 
-        function addToPlaylist() {
-            const id = prompt('ID de Video para agregar a cola:');
-            if (id) playlist.push(id);
-        }
+    function tryRegister() {
+      const u = document.getElementById('reg-username').value.trim();
+      const p = document.getElementById('reg-password').value;
+      const file = document.getElementById('reg-avatar').files[0];
 
-        function likeVideo(id) {
-            likes[id] = (likes[id] || 0) + 1;
-            alert(`Like en Video ${id}: ${likes[id]}`);
-        }
+      if (users.some(x => x.username === u)) return alert('Usuario ya existe');
 
-        function subscribe(id) {
-            subs[id] = true;
-            alert(`Suscrito a canal de Video ${id}`);
-        }
+      if (file) {
+        const r = new FileReader();
+        r.onload = e => registerUser(u, p, e.target.result);
+        r.readAsDataURL(file);
+      } else {
+        registerUser(u, p, '');
+      }
+    }
 
-        function uploadVideo() {
-            alert('Video subido (simulado)');
-        }
+    function registerUser(username, password, avatar) {
+      users.push({ username, password, avatar, verified:false, banned:false, isAdmin: username==='admin' });
+      saveUsers();
+      alert('¡Cuenta creada! Inicia sesión.');
+      showLogin();
+    }
 
-        function scheduleVideo() {
-            alert('Video programado (simulado)');
-        }
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(el=>el.style.display='none');
+      document.getElementById(id).style.display = 'block';
 
-        function startLive() {
-            alert('Transmisión en vivo iniciada (simulada con OBS)');
-        }
+      document.querySelectorAll('.sidebar-item').forEach(el=>el.classList.remove('active'));
+      event?.target?.closest('.sidebar-item')?.classList.add('active');
+    }
 
-        function showAdminPanel() {
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
-            loadUsers();
-        }
+    function watchVideo(id) {
+      alert(`Reproduciendo video #${id}  (simulación)`);
+    }
 
-        function loadUsers() {
-            if (!isAdmin) return;
-            const list = document.getElementById('user-list');
-            list.innerHTML = '';
-            users.forEach(u => {
-                if (u.username !== 'admin') {
-                    const div = document.createElement('div');
-                    div.className = 'admin-user';
-                    div.innerHTML = `${u.username} ${u.banned ? '(Baneado)' : ''}`;
-                    const banBtn = document.createElement('button');
-                    banBtn.innerText = u.banned ? 'Desbanear' : 'Banear';
-                    banBtn.onclick = () => banUser(u.username);
-                    div.appendChild(banBtn);
-                    const verifToggle = document.createElement('span');
-                    verifToggle.className = 'verified-toggle';
-                    verifToggle.innerText = u.verified ? 'Quitar Verificado' : 'Verificar (como Roblox)';
-                    verifToggle.onclick = () => toggleVerified(u.username);
-                    div.appendChild(verifToggle);
-                    list.appendChild(div);
-                }
-            });
-        }
+    function uploadVideo()    { alert('Video publicado con éxito 🔥'); }
+    function scheduleVideo()  { alert('Programado para detonar en la fecha seleccionada'); }
+    function startLiveSimulation() {
+      document.getElementById('live-status').innerHTML = '¡ESTÁS EN VIVO AHORA! 🚀<br>(simulación activa)';
+    }
 
-        function banUser(username) {
-            const user = users.find(u => u.username === username);
-            user.banned = !user.banned;
-            localStorage.setItem('users', JSON.stringify(users));
-            loadUsers();
-        }
+    function loadAdminPanel() {
+      const c = document.getElementById('admin-user-list');
+      c.innerHTML = '';
+      users.forEach(user => {
+        if (user.username === 'admin') return;
+        const row = document.createElement('div');
+        row.className = 'user-row';
+        row.innerHTML = `
+          <div>
+            <strong>${user.username}</strong>
+            ${user.verified ? '<span style="color:#00f0ff; margin-left:8px;">✓ Verificado</span>' : ''}
+            ${user.banned ? '<span style="color:#ff2d55; margin-left:12px;">(Baneado)</span>' : ''}
+          </div>
+          <div class="admin-actions">
+            <button class="verify-btn" onclick="toggleVerify('${user.username}')">
+              ${user.verified ? 'Quitar verificación' : 'Dar verificación'}
+            </button>
+            <button class="${user.banned?'unban-btn':'ban-btn'}" onclick="toggleBan('${user.username}')">
+              ${user.banned ? 'Desbanear' : 'Banear'}
+            </button>
+          </div>
+        `;
+        c.appendChild(row);
+      });
+    }
 
-        function toggleVerified(username) {
-            const user = users.find(u => u.username === username);
-            user.verified = !user.verified;
-            localStorage.setItem('users', JSON.stringify(users));
-            if (currentUser && currentUser.username === username) {
-                currentUser.verified = user.verified;
-                document.getElementById('verified-badge').style.display = user.verified ? 'inline' : 'none';
-            }
-            loadUsers();
-        }
+    function toggleVerify(username) {
+      const u = users.find(x=>x.username===username);
+      u.verified = !u.verified;
+      saveUsers();
+      loadAdminPanel();
+    }
 
-        // Iniciar en login
-        showLogin();
-    </script>
+    function toggleBan(username) {
+      const u = users.find(x=>x.username===username);
+      u.banned = !u.banned;
+      saveUsers();
+      loadAdminPanel();
+    }
+
+    // Init
+    showLogin();
+
+    document.getElementById('admin-sidebar-item').addEventListener('click', loadAdminPanel);
+
+    // Scroll header effect
+    window.addEventListener('scroll', () => {
+      document.querySelector('header').classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
 </body>
 </html>
